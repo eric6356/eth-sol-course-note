@@ -8,3 +8,5 @@
 * [Greetings Project](section6/README.md)
   * [Create Project From Starch](section6/from-scratch.md)
   * [Create Project Using Truffle](section6/using-truffle.md)
+  * [Understanding Gas](section6/understanding-gas.md)
+  * [Gas and Opcodes](section6/gas-and-opcodes.md)
