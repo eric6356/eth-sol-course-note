@@ -89,7 +89,7 @@ truffle console
 
 inside the truffle console
 ```js
-web3.eth.getBalance(web3.eth.accounts[1]).toNumber() // 100000000000000000000, default value set by testrpc
+web3.eth.getBalance(web3.eth.accounts[1]).toString() // '100000000000000000000', default value set by testrpc
 Greetings.deployed().then(instance => app = instance)
 app.setGreetings('new value', {from: web3.eth.accounts[1]})
 { tx: '0x171aa57620aa64cdf1ff4480fbea726401a413577591a5fbfb7d5ea3fdedfae6',
@@ -104,6 +104,6 @@ app.setGreetings('new value', {from: web3.eth.accounts[1]})
      logs: [],
      status: 1 },
   logs: [] }
-web3.eth.getBalance(web3.eth.accounts[1]).toNumber() // 99996677800000000000
+web3.eth.getBalance(web3.eth.accounts[1]).toString() // '99996677800000000000'
 ```
 actual gas price used for  set greetings is 33222 * 100000000000 = 100000000000000000000 - 99996677800000000000

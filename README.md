@@ -10,3 +10,4 @@
   * [Create Project Using Truffle](section6/using-truffle.md)
   * [Understanding Gas](section6/understanding-gas.md)
   * [Gas and Opcodes](section6/gas-and-opcodes.md)
+  * [Transaction](section6/transaction.md)
