@@ -16,5 +16,5 @@ npm install -g ganache-cli
 ## [Truffle](http://truffleframework.com/)
 
 ```bash
-npm install -g truffle
+npm install -g truffle@3.4.11  # the course material is not based on the latest version
 ```

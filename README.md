@@ -11,3 +11,6 @@
   * [Understanding Gas](section6/understanding-gas.md)
   * [Gas and Opcodes](section6/gas-and-opcodes.md)
   * [Transaction](section6/transaction.md)
+* [ChanList](section7/README.md)
+  * [Init Project](section7/init.md)
+  * [Implement Contract](section7/2-implement-contract.md)
