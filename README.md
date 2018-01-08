@@ -18,3 +18,4 @@
   * [Init Web3 in Browser](section7/4-web3-init.md)
   * [Event](section7/5-event.md)
   * [Buy Article](section7/6-buy-article.md)
+  * [Multiple Articles](section7/7-multiple-articles.md)
