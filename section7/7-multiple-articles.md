@@ -4,9 +4,6 @@
 
 update `contracts/ChainList.sol`
 ```Solidity
---- b	2018-01-09 16:45:38.000000000 -0500
-+++ a	2018-01-09 16:46:47.000000000 -0500
-@@ -1,55 +1,107 @@
  pragma solidity ^0.4.2;
 
  contract ChainList {
