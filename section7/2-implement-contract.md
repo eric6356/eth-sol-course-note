@@ -1,4 +1,4 @@
-## Implement ChainList Contract
+# Implement ChainList Contract
 
 implement `contracts/ChainList.sol`
 ```Solidity
@@ -12,8 +12,7 @@ contract ChainList {
     uint256 price;
 
     // sell an article
-    function sellArticle(string _name, string _description, uint256 _price)
-    public {
+    function sellArticle(string _name, string _description, uint256 _price) public {
         seller = msg.sender;
         name = _name;
         description = _description;

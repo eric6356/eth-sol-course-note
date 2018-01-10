@@ -5,3 +5,4 @@
 * [Event](5-event.md)
 * [Buy Article](6-buy-article.md)
 * [Multiple Articles](7-multiple-articles.md)
+* [Selfdestruct](8-selfdestruct.md)
