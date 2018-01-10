@@ -1,6 +1,6 @@
 # Deploy
 - [Rinkeby](https://www.rinkeby.io)
-- [Etherscan](rinkeby.etherscan.io)
+- [Etherscan](https://rinkeby.etherscan.io)
 
 start rinkey node
 ```bash
