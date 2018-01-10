@@ -21,3 +21,4 @@
   * [Multiple Articles](section7/7-multiple-articles.md)
   * [Selfdestruct](section7/8-selfdestruct.md)
   * [Inheritance](section7/9-inheritance.md)
+  * [Deploy](section7/10-deploy.md)
