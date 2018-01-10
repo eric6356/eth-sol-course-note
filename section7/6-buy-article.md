@@ -1,33 +1,62 @@
 # Buy Article
 
 update the contract `contracts/ChainList.sol` add `sellArticleEvent` and `buyArticle` function
-```Solidity
-event buyArticleEvent(address indexed _seller, address indexed _buyer, string _name, uint256 _price);
-```
-```Solidity
-// buy an article
-function buyArticle() payable public {
-    // should be ready for sale
-    require(seller != 0x00);
+```diff
+ pragma solidity ^0.4.2;
 
-    // should not be sold
-    require(buyer == 0x00);
+ contract ChainList {
+     // State variables
+     address seller;
+     string name;
+     string description;
+     uint256 price;
 
-    // you cannot by your own article
-    require(msg.sender != seller);
+     // Events
+     event sellArticleEvent(address indexed _seller, string _name, uint256 _price);
++    event buyArticleEvent(address indexed _seller, address indexed _buyer, string _name, uint256 _price);
 
-    // the value send transacted corresponds to the article price
-    require(msg.value == price);
+     // sell an article
+     function sellArticle(string _name, string _description, uint256 _price) public {
+         seller = msg.sender;
+         name = _name;
+         description = _description;
+         price = _price;
+         sellArticleEvent(seller, name, price);
+     }
 
-    // keep the buyer's information
-    buyer = msg.sender;
-
-    // the buyer can buy the article
-    seller.transfer(msg.value);
-
-    //trigger event
-    buyArticleEvent(seller, buyer, name, price);
-}
+     // get the article
+     function getArticle() public constant returns (
+         address _seller,
+         string _name,
+         string _description,
+         uint256 _price) {
+         return (seller, name, description, price);
+     }
++
++    // buy an article
++    function buyArticle() payable public {
++        // should be ready for sale
++        require(seller != 0x00);
++
++        // should not be sold
++        require(buyer == 0x00);
++
++        // you cannot by your own article
++        require(msg.sender != seller);
++
++        // the value send transacted corresponds to the article price
++        require(msg.value == price);
++
++        // keep the buyer's information
++        buyer = msg.sender;
++
++        // the buyer can buy the article
++        seller.transfer(msg.value);
++
++        //trigger event
++        buyArticleEvent(seller, buyer, name, price);
++    }
+ }
 ```
 4 way to interrupt a contract function:  
 1. `require` (preconditions)

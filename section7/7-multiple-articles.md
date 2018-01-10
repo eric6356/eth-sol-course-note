@@ -1,116 +1,146 @@
 # Multiple Articles
 - [mappings](http://solidity.readthedocs.io/en/develop/types.html#mappings)
-- [struct](http://solidity.readthedocs.io/en/develop/types.html#structs)
+- [structs](http://solidity.readthedocs.io/en/develop/types.html#structs)
 
 update `contracts/ChainList.sol`
 ```Solidity
-pragma solidity ^0.4.2;
+--- b	2018-01-09 16:45:38.000000000 -0500
++++ a	2018-01-09 16:46:47.000000000 -0500
+@@ -1,55 +1,107 @@
+ pragma solidity ^0.4.2;
 
-contract ChainList {
-    // Custom types
-    struct Article {
-        uint id;
-        address seller;
-        address buyer;
-        string name;
-        string description;
-        uint256 price;
-    }
+ contract ChainList {
++    // Custom types
++    struct Article {
++        uint id;
++        address seller;
++        address buyer;
++        string name;
++        string description;
++        uint256 price;
++    }
++
+     // State variables
+-    address seller;
+-    string name;
+-    string description;
+-    uint256 price;
++    mapping(uint => Article) public articles;
++    uint articleCounter;
 
-    // State variables
-    mapping(uint => Article) public articles;
-    uint articleCounter;
+     // Events
+-    event sellArticleEvent(address indexed _seller, string _name, uint256 _price);
+-    event buyArticleEvent(address indexed _seller, address indexed _buyer, string _name, uint256 _price);
++    event sellArticleEvent(
++        uint indexed _id,
++        address indexed _seller,
++        string _name,
++        uint256 _price
++    );
++    event buyArticleEvent(
++        uint indexed _id,
++        address indexed _seller,
++        address indexed _buyer,
++        string _name,
++        uint256 _price
++    );
 
-    // Events
-    event sellArticleEvent(
-        uint indexed _id,
-        address indexed _seller,
-        string _name,
-        uint256 _price
-    );
-    event buyArticleEvent(
-        uint indexed _id,
-        address indexed _seller,
-        address indexed _buyer,
-        string _name,
-        uint256 _price
-    );
+     // sell an article
+     function sellArticle(string _name, string _description, uint256 _price) public {
+-        seller = msg.sender;
+-        name = _name;
+-        description = _description;
+-        price = _price;
+-        sellArticleEvent(seller, name, price);
++        articleCounter++;
++
++        articles[articleCounter] = Article(
++            articleCounter,
++            msg.sender,
++            0x0,
++            _name,
++            _description,
++            _price
++        );
++
++        sellArticleEvent(articleCounter, msg.sender, _name, _price);
+     }
 
-    // sell an article
-    function sellArticle(string _name, string _description, uint256 _price) public {
-        articleCounter++;
+-    // get the article
+-    function getArticle() public constant returns (
+-        address _seller,
+-        string _name,
+-        string _description,
+-        uint256 _price) {
+-        return (seller, name, description, price);
++    // fetch the number of articles in the contract
++    function getNumberOfArticles() public constant returns (uint) {
++        return (articleCounter);
++    }
++
++    // fetch and returns all article IDs available for sale
++    function getArticleForSale() public constant returns (uint[]) {
++        // there should be at least 1 article
++        require(articleCounter > 0);
++
++        // prepare output arrays
++        uint[] memory articleIds = new uint[](articleCounter);
++
++        uint numberOfArticlesForSale = 0;
++        for (uint i = 1; i <= articleCounter; i++) {
++            if (articles[i].buyer == 0x0) {
++                articleIds[numberOfArticlesForSale] = articles[i].id;
++                numberOfArticlesForSale++;
++            }
++        }
++
++        // copy result to smaller array
++        uint[] memory forSale = new uint[](numberOfArticlesForSale);
++        for (i = 0; i < numberOfArticlesForSale; i++) {
++            forSale[i] = articleIds[i];
++        }
++        return (forSale);
+     }
 
-        articles[articleCounter] = Article(
-            articleCounter,
-            msg.sender,
-            0x0,
-            _name,
-            _description,
-            _price
-        );
+     // buy an article
+-    function buyArticle() payable public {
+-        // should be ready for sale
+-        require(seller != 0x00);
++    function buyArticle(uint _id) payable public {
++        // there should be at least 1 article
++        require(articleCounter > 0);
++
++        // the article should exist
++        require(_id > 0 && _id <= articleCounter);
++
++        // retrieve the article
++        Article storage article = articles[_id];
 
-        sellArticleEvent(articleCounter, msg.sender, _name, _price);
-    }
+         // should not be sold
+-        require(buyer == 0x00);
++        require(article.buyer == 0x00);
 
-    // fetch the number of articles in the contract
-    function getNumberOfArticles() public constant returns (uint) {
-        return (articleCounter);
-    }
+         // you cannot by your own article
+-        require(msg.sender != seller);
++        require(msg.sender != article.seller);
 
-    // fetch and returns all article IDs available for sale
-    function getArticleForSale() public constant returns (uint[]) {
-        // there should be at least 1 article
-        require(articleCounter > 0);
+         // the value send transacted corresponds to the article price
+-        require(msg.value == price);
++        require(msg.value == article.price);
 
-        // prepare output arrays
-        uint[] memory articleIds = new uint[](articleCounter);
+         // keep the buyer's information
+-        buyer = msg.sender;
++        article.buyer = msg.sender;
 
-        uint numberOfArticlesForSale = 0;
-        for (uint i = 1; i <= articleCounter; i++) {
-            if (articles[i].buyer == 0x0) {
-                articleIds[numberOfArticlesForSale] = articles[i].id;
-                numberOfArticlesForSale++;
-            }
-        }
+         // the buyer can buy the article
+-        seller.transfer(msg.value);
++        article.seller.transfer(msg.value);
 
-        // copy result to smaller array
-        uint[] memory forSale = new uint[](numberOfArticlesForSale);
-        for (i = 0; i < numberOfArticlesForSale; i++) {
-            forSale[i] = articleIds[i];
-        }
-        return (forSale);
-    }
-
-    // buy an article
-    function buyArticle(uint _id) payable public {
-        // there should be at least 1 article
-        require(articleCounter > 0);
-
-        // the article should exist
-        require(_id > 0 && _id <= articleCounter);
-
-        // retrieve the article
-        Article storage article = articles[_id];
-
-        // should not be sold
-        require(article.buyer == 0x00);
-
-        // you cannot by your own article
-        require(msg.sender != article.seller);
-
-        // the value send transacted corresponds to the article price
-        require(msg.value == article.price);
-
-        // keep the buyer's information
-        article.buyer = msg.sender;
-
-        // the buyer can buy the article
-        article.seller.transfer(msg.value);
-
-        //trigger event
-        buyArticleEvent(_id, article.seller, article.buyer, article.name, article.price);
-    }
-}
+         //trigger event
+-        buyArticleEvent(seller, buyer, name, price);
++        buyArticleEvent(_id, article.seller, article.buyer, article.name, article.price);
+     }
+ }
 ```
 
 play with it in the truffle develop console
